@@ -1,48 +1,153 @@
-APIs follow standard practices for user authentication and email verification. Here’s how they align with common standards:
+Here's an updated version of the README with the necessary adjustments for the OTP-based authentication:
 
-1. **Signup API**:
+---
 
-   - **Checks for required fields**: Ensures all necessary data is provided.
-   - **Checks if the user already exists**: Avoids duplicate registrations.
-   - **Sends a verification email**: Encourages email verification before login.
-   - **Provides a clear response**: Indicates success or failure.
+# Project README
 
-2. **Verify Email API**:
+## Overview
 
-   - **Validates the token**: Ensures the token is correct and not expired.
-   - **Updates user status**: Marks the email as verified and clears the token.
-   - **Sends a welcome email**: Optional, but useful for user engagement.
+This project implements a user authentication system with email verification using OTP (One-Time Password). The API follows standard practices for user authentication and email verification.
 
-3. **Login API**:
+## API Endpoints
 
-   - **Checks user existence and password validity**: Verifies credentials.
-   - **Checks email verification status**: Ensures only verified users can log in.
-   - **Generates a token and sets a cookie**: For authentication purposes.
-   - **Provides appropriate responses**: Handles both successful and failed login attempts.
+### 1. Signup API
 
-4. **Logout API**:
+**Endpoint:** `POST /api/auth/signup`
 
-   - **Clears the authentication cookie**: Logs the user out.
+**Description:** Registers a new user and sends an OTP for email verification.
 
-5. **Forgot Password API**:
+**Request Body:**
 
-   - **Generates a reset token**: Allows the user to reset their password.
-   - **Sends a reset email**: Contains a link for password reset.
+```json
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "User Name"
+}
+```
 
-6. **Reset Password API**:
+**Response:**
 
-   - **Validates the reset token**: Ensures the token is valid and not expired.
-   - **Updates the password**: Resets the user’s password and clears the token.
-   - **Sends a success email**: Optional, but confirms the password reset.
+- `201 Created` - User created successfully. Email verification sent.
+- `400 Bad Request` - Missing fields or user already exists.
 
-7. **Check Auth API**:
-   - **Verifies the user’s authentication**: Ensures the user is authenticated and provides user data without sensitive information like passwords.
+**Notes:**
 
-### Key Points
+- OTP-based verification is used for email confirmation.
 
-- **Email Verification**: Users must verify their email before logging in. This is a standard practice to prevent unauthorized access and ensure the authenticity of the user.
-- **Password Management**: Secure password storage and reset mechanisms are in place.
-- **Token Management**: Both JWT tokens for login and reset tokens for password recovery are used appropriately.
-- **Error Handling**: Clear error messages are provided for different failure scenarios, which helps in debugging and improving the user experience.
+### 2. Verify Email API
 
-These practices align with common security standards and provide a good user experience. If you have any specific requirements or additional features, you might need to make further adjustments.
+**Endpoint:** `POST /api/auth/verify-email`
+
+**Description:** Verifies the user's email using the OTP received.
+
+**Request Body:**
+
+```json
+{
+  "otp": "123456"
+}
+```
+
+**Response:**
+
+- `200 OK` - Email verified successfully.
+- `400 Bad Request` - Invalid or expired OTP.
+
+**Notes:**
+
+- The OTP is validated and if correct, the user's email is marked as verified.
+
+### 3. Login API
+
+**Endpoint:** `POST /api/auth/login`
+
+**Description:** Logs in a user with email and password.
+
+**Request Body:**
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+**Response:**
+
+- `200 OK` - Login successful, authentication token provided.
+- `400 Bad Request` - Invalid credentials or email not verified.
+
+**Notes:**
+
+- Users must verify their email before logging in.
+
+### 4. Logout API
+
+**Endpoint:** `POST /api/auth/logout`
+
+**Description:** Logs out a user by clearing the authentication cookie.
+
+**Response:**
+
+- `200 OK` - Logged out successfully.
+
+### 5. Forgot Password API
+
+**Endpoint:** `POST /api/auth/forgot-password`
+
+**Description:** Sends a password reset link to the user's email.
+
+**Request Body:**
+
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+**Response:**
+
+- `200 OK` - Password reset link sent.
+- `400 Bad Request` - User not found.
+
+### 6. Reset Password API
+
+**Endpoint:** `POST /api/auth/reset-password/:token`
+
+**Description:** Resets the user's password using the reset token.
+
+**Request Body:**
+
+```json
+{
+  "password": "newpassword123"
+}
+```
+
+**Response:**
+
+- `200 OK` - Password reset successful.
+- `400 Bad Request` - Invalid or expired reset token.
+
+### 7. Check Auth API
+
+**Endpoint:** `GET /api/auth/check-auth`
+
+**Description:** Checks the authentication status of the user.
+
+**Response:**
+
+- `200 OK` - User is authenticated.
+- `400 Bad Request` - User not found.
+
+## Key Points
+
+- **Email Verification:** Users must verify their email using an OTP before logging in.
+- **Password Management:** Secure password storage and reset mechanisms are in place.
+- **Token Management:** JWT tokens for login and reset tokens for password recovery are used appropriately.
+- **Error Handling:** Clear error messages are provided for different failure scenarios.
+
+---
+
+Feel free to adjust any specific details as needed!
