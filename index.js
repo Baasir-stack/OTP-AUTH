@@ -12,23 +12,17 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const __dirname = path.resolve();
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+// CORS Configuration for your frontend
+app.use(cors({ origin: "https://your-frontend-url.com", credentials: true }));
 
-app.use(express.json()); // allows us to parse incoming requests:req.body
-app.use(cookieParser()); // allows us to parse incoming cookies
+app.use(express.json()); // Parse incoming JSON requests
+app.use(cookieParser()); // Parse incoming cookies
 
+// Your API routes
 app.use("/api/auth", authRoutes);
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "/frontend/dist")));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-  });
-}
-
+// Start server
 app.listen(PORT, () => {
   connectDB();
   console.log("Server is running on port: ", PORT);
