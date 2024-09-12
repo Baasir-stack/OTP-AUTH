@@ -26,7 +26,9 @@ export const signup = async (req, res) => {
     }
 
     const hashedPassword = await bcryptjs.hash(password, 10);
-    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationToken = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
 
     const user = new User({
       email,
