@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 // CORS Configuration for your frontend
 
-app.use(cors({ origin: "*", credentials: true }));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use(express.json()); // Parse incoming JSON requests
 app.use(cookieParser()); // Parse incoming cookies
