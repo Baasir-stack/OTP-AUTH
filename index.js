@@ -14,7 +14,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // CORS Configuration for your frontend
-app.use(cors({ origin: "https://your-frontend-url.com", credentials: true }));
+
+app.use(cors({ origin: "*", credentials: true }));
 
 app.use(express.json()); // Parse incoming JSON requests
 app.use(cookieParser()); // Parse incoming cookies
